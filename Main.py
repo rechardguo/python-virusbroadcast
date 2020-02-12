@@ -36,10 +36,10 @@ class InfecteThread(QThread):
                          if sickPerson==movedPerson:
                              continue
                          randomRate = random.random()
-                         print(movedPerson.distance(sickPerson))
-                         if randomRate < Constants.BROAD_RATE and movedPerson.distance(sickPerson) < Constants.SAFE_DIST :
+                         if movedPerson.atHome==False and randomRate < Constants.BROAD_RATE and movedPerson.distance(sickPerson) < Constants.SAFE_DIST :
                              movedPerson.beShaowedInfect(worldTime)
             index+=1
+            self.msleep(100)
 
 
 class Widget(QWidget):
@@ -51,7 +51,7 @@ class Widget(QWidget):
         self.city=City()
         self.initInfectedPerson()
         self.timer = QTimer()
-        self.timer.setInterval(100)  # 500毫秒
+        self.timer.setInterval(500)  # 100毫秒
         self.timer.timeout.connect(self.refresh)
         self.timer.start()
         self.thread=InfecteThread()

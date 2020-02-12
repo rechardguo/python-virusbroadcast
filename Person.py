@@ -25,7 +25,7 @@ class Person(object):
         self.state=PersonStatus.NORMAL
         self.infectedTime = 0 # 感染时间
         self.confirmedTime = 0 # 确诊时间
-        self.inHospital=False
+        self.atHome=False
 
     def __eq__(self,other):
         if isinstance(other,Person):
@@ -47,7 +47,7 @@ class Person(object):
         return self.state
 
     def isInfected(self):
-        return self.state.value > PersonStatus.NORMAL.value
+        return self.state > PersonStatus.NORMAL
 
     def beShaowedInfect(self,worldTime):
         self.state=PersonStatus.SHADOW
@@ -65,7 +65,7 @@ class Person(object):
     def update(self,worldTime):
         if self.state == PersonStatus.FROZEN:
          return
-        if self.state.value >= PersonStatus.SHADOW.value and worldTime - self.infectedTime >= Constants.HOSPITAL_RECEIVE_TIME:
+        if self.state.value== PersonStatus.CONFIRMED.value and worldTime - self.infectedTime >= Constants.HOSPITAL_RECEIVE_TIME:
             bed = hospital.takeSick() #查找空床位
             if bed != None :
              #安置病人
@@ -96,7 +96,9 @@ class Person(object):
         if self.state == PersonStatus.FROZEN:
              return
         if not self.wantMove():
+             self.atHome=True
              return
+        self.atHome=False
         dx=random.gauss(1,10)
         nx=self.x+dx
         if nx>800:
